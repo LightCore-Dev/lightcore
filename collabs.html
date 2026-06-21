@@ -3653,27 +3653,6 @@
   }
 </style>
 
-<div id="soul-flash"></div>
-<div id="fairy-guide">
-  <div id="fairy-bubble">
-    <span class="bubble-corner bubble-corner--tl"></span>
-    <span class="bubble-corner bubble-corner--br"></span>
-    <div class="bubble-scan"></div>
-    <button class="close-bubble" onclick="closeFairyBubble()">✕</button>
-    <div class="fairy-hey" id="fairy-hey"><span class="fairy-mood-icon" id="soul-mood-icon">✦</span> SOUL <span class="fairy-mood-icon" id="soul-mood-icon2">✦</span></div>
-    <div class="fairy-text" id="fairy-text"></div>
-    <button id="soul-tip-btn" onclick="showRandomTip()">✦ ask soul anything ✦</button>
-  </div>
-  <div id="soul-mood-pill">curious</div>
-  <div id="soul-tag">SOUL</div>
-  <div id="fairy-orb" onclick="handleOrbClick(event)">
-    <div class="fairy-halo"></div>
-    <div class="fairy-wing left"></div>
-    <div class="fairy-wing right"></div>
-    <div class="fairy-glow"></div>
-    <div class="fairy-core"></div>
-  </div>
-</div>
 
 <script>
   // ── SOUL THE FAIRY — Enhanced Guide ───────────────────────────────────
@@ -3696,6 +3675,7 @@
   function setSoulMood(mood) {
     if (!(mood in soulMoods)) return;
     const guide = document.getElementById('fairy-guide');
+    if (!guide) return; // Soul is currently disabled
     const data  = soulMoods[mood];
     const prevMood = currentMood;
     currentMood = mood;
@@ -3965,6 +3945,7 @@
   let textRotateIdx   = 0;
 
   function setFairySection(id) {
+    if (!document.getElementById('fairy-guide')) return; // Soul is currently disabled
     if (id === currentSection) return;
     currentSection = id;
     const data = fairySections[id];
@@ -4069,11 +4050,7 @@
 
   // Init fairy after entering site
   function initFairy() {
-    setTimeout(() => {
-      document.getElementById('fairy-guide').classList.add('active');
-      setFairySection('welcome');
-      trailInterval = setInterval(spawnTrail, 500);
-    }, 1200);
+    // Soul is temporarily disabled — removed for now, may return in a future update.
   }
 
   // Section observer
@@ -4096,7 +4073,7 @@
   setTimeout(() => {
     ['beats','collabs','team'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) { fairyObs.observe(el); navObs.observe(el); }
+      if (el) { navObs.observe(el); }
     });
   }, 100);
 </script>
@@ -11153,7 +11130,7 @@ body.lcx-safe-mode #lc-achv-toast.show { opacity: 1; }
     }
   });
 
-  /* ── Easter egg: 5 quick clicks/toggles wakes Soul up ─────────────── */
+  /* ── Easter egg: 5 quick clicks/toggles ──────────────────────────── */
   let lcxVbClicks = [];
   function registerRapidClick() {
     const now = Date.now();
@@ -11187,8 +11164,7 @@ body.lcx-safe-mode #lc-achv-toast.show { opacity: 1; }
         setTimeout(() => s.remove(), 900);
       }
     }
-    if (window.lcToast) window.lcToast('⚡ Dev mode tickled — Soul noticed ⚡');
-    if (window.lcxSetSoulMood) window.lcxSetSoulMood('excited');
+    if (window.lcToast) window.lcToast('⚡ Dev mode tickled ⚡');
     if (window.lcxPlayFairyMood) window.lcxPlayFairyMood();
     if (window.lcxUnlockAchievement) window.lcxUnlockAchievement('click_happy');
   }
@@ -11330,43 +11306,6 @@ body.lcx-safe-mode #lc-achv-toast.show { opacity: 1; }
     badge.addEventListener('mouseleave', () => { badge.style.transform = ''; });
   })();
 
-  /* ── Hidden easter egg: type the word "soul" anywhere on the page ──── */
-  let lcxSoulBuffer = '';
-  document.addEventListener('keydown', (e) => {
-    if (!e.key || e.key.length !== 1) return;
-    const tag = (e.target && e.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
-    lcxSoulBuffer = (lcxSoulBuffer + e.key.toLowerCase()).slice(-4);
-    if (lcxSoulBuffer === 'soul') {
-      lcxSoulBuffer = '';
-      fireSoulWordEasterEgg();
-    }
-  });
-  function fireSoulWordEasterEgg() {
-    const reduced = window.__lcxReducedMotion || document.body.classList.contains('lcx-safe-mode');
-    if (!reduced) {
-      const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-      const glyphs = ['✦','✧','⋆','✶','✺','🧚'];
-      for (let i = 0; i < 14; i++) {
-        const s = document.createElement('span');
-        s.className = 'lc-vb-spark';
-        s.style.fontSize = '18px';
-        s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-        s.style.left = cx + 'px';
-        s.style.top = cy + 'px';
-        const ang = Math.random() * Math.PI * 2;
-        const dist = 60 + Math.random() * 90;
-        s.style.setProperty('--vbx', Math.cos(ang) * dist + 'px');
-        s.style.setProperty('--vby', Math.sin(ang) * dist + 'px');
-        document.body.appendChild(s);
-        setTimeout(() => s.remove(), 950);
-      }
-    }
-    if (window.lcToast) window.lcToast('🧚 Soul heard her name ✦');
-    if (window.lcxSetSoulMood) window.lcxSetSoulMood('happy');
-    if (window.lcxPlayFairyMood) window.lcxPlayFairyMood();
-    if (window.lcxUnlockAchievement) window.lcxUnlockAchievement('soul_friend');
-  }
 })();
 </script>
 
@@ -11485,7 +11424,6 @@ body.lcx-safe-mode #lc-achv-toast.show { opacity: 1; }
   const ACHIEVEMENTS = {
     first_visit:    { icon: '✦',  title: 'Welcome to LightCore', desc: 'You found the store.' },
     quick_draw:     { icon: '⌁',  title: 'Quick Draw',           desc: 'Opened the Quick Jump palette.' },
-    soul_friend:    { icon: '🧚', title: "Soul's Friend",        desc: 'Soul heard her name.' },
     click_happy:    { icon: '⚡', title: 'Click Happy',          desc: 'Tickled the version badge.' },
     high_roller:    { icon: '💸', title: 'High Roller',          desc: 'Sent your first tip.' },
     beat_collector: { icon: '🎵', title: 'Beat Collector',       desc: 'Started a beat license purchase.' },
