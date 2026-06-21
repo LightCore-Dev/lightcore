@@ -2152,8 +2152,8 @@
     <canvas id="aurora-canvas"></canvas>
     <div class="lc-hero-content">
       <div class="lc-hero-eyebrow">Official Beat Store · Est. 2026</div>
-      <h1 class="lc-hero-title" id="heroTitle" data-text="LIGHTCORE">
-        <span class="lc-title-line">LIGHT</span><span class="lc-title-line accent">CORE</span>
+      <h1 class="lc-hero-title" id="heroTitle" data-text="BEATS">
+        <span class="lc-title-line">BEATS</span>
       </h1>
       <p class="lc-hero-sub">Beats · Licenses · Collabs</p>
       <div class="lc-hero-cta">
@@ -10591,7 +10591,7 @@ body.lcx-safe-mode #lc-achv-toast.show { opacity: 1; }
   function injectGlitch() {
     const title = document.querySelector('.lc-hero-title');
     if (!title || title.querySelector('.lc-glitch-r')) return;
-    const text = 'LIGHTCORE';
+    const text = title.getAttribute('data-text') || 'BEATHERO';
     ['lc-glitch-r','lc-glitch-b'].forEach(cls => {
       const el = document.createElement('span');
       el.className = cls;

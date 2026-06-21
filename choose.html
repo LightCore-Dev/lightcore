@@ -383,12 +383,13 @@
     <button id="wn-close" onclick="closeWhatsNew()">✕</button>
     <div id="wn-kicker">Patch Notes</div>
     <div id="wn-title">What's New</div>
-    <div id="wn-version">v1.20.0</div>
+    <div id="wn-version">v1.21.0</div>
 
     <div class="wn-section">
       <div class="wn-section-label">Changes</div>
       <div class="wn-item"><span class="wn-item-icon">🧚</span><span class="wn-item-text"><b>Soul is on a break.</b> She's been temporarily removed — she'll be back in a future update with new features.</span></div>
       <div class="wn-item"><span class="wn-item-icon">◈</span><span class="wn-item-text"><b>Version badge removed.</b> The old build-info badge is gone for now — a new one is coming back later.</span></div>
+      <div class="wn-item"><span class="wn-item-icon">🔠</span><span class="wn-item-text"><b>New hero titles.</b> Beats, Collabs, and Team now have their own page titles instead of all saying "LightCore".</span></div>
     </div>
 
     <div id="wn-foot">
@@ -402,7 +403,7 @@
   // ── WHAT'S NEW ───────────────────────────────────────────────────────
   // Bump WN_VERSION whenever there's something new to show. Anyone whose
   // last-seen version doesn't match will get the popup once automatically.
-  const WN_VERSION = '1.20.0';
+  const WN_VERSION = '1.21.0';
 
   function openWhatsNew() {
     const overlay = document.getElementById('wn-overlay');
