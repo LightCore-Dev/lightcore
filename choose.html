@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LightCore — What are you here for?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #02020a;
+    color: #e0e0ff;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::selection { background: #7c3aed44; color: #fff; }
+
+  #ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% 20%, rgba(13,255,110,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse 800px 600px at 80% 80%, rgba(245,158,11,0.06) 0%, transparent 55%);
+  }
+  #ambient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+  }
+
+  #choose-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+    padding: 24px;
+  }
+
+  .choose-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 5px;
+    color: #fff;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: chooseFadeIn 0.6s ease forwards;
+  }
+  #choose-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(22px, 4vw, 32px);
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: chooseFadeIn 0.6s ease 0.08s forwards;
+  }
+  @keyframes chooseFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #choose-options {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .choose-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 200px;
+    padding: 40px 22px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    text-decoration: none;
+    transition: all 0.35s ease;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: chooseFadeIn 0.6s ease forwards;
+  }
+  .choose-card--beats   { animation-delay: 0.16s; }
+  .choose-card--collabs { animation-delay: 0.24s; }
+  .choose-card--story   { animation-delay: 0.32s; }
+
+  .choose-card-icon {
+    font-size: 30px;
+    margin-bottom: 6px;
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+  .choose-card-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .choose-card-sub {
+    font-size: 13px;
+    color: #8b8baf;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .choose-card--beats:hover {
+    border-color: #0dff6e66;
+    background: rgba(13,255,110,0.05);
+    box-shadow: 0 0 50px rgba(13,255,110,0.12);
+    transform: translateY(-4px);
+  }
+  .choose-card--beats:hover .choose-card-icon { filter: drop-shadow(0 0 14px #0dff6e); transform: scale(1.1); }
+
+  .choose-card--collabs:hover {
+    border-color: #f59e0b66;
+    background: rgba(245,158,11,0.05);
+    box-shadow: 0 0 50px rgba(245,158,11,0.12);
+    transform: translateY(-4px);
+  }
+  .choose-card--collabs:hover .choose-card-icon { filter: drop-shadow(0 0 14px #f59e0b); transform: scale(1.1); }
+
+  .choose-card--story:hover {
+    border-color: #a78bfa66;
+    background: rgba(167,139,250,0.05);
+    box-shadow: 0 0 50px rgba(167,139,250,0.12);
+    transform: translateY(-4px);
+  }
+  .choose-card--story:hover .choose-card-icon { filter: drop-shadow(0 0 14px #a78bfa); transform: scale(1.1); }
+
+  #choose-skip {
+    display: inline-block;
+    background: none;
+    border: none;
+    color: #4b5563;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    opacity: 0;
+    animation: chooseFadeIn 0.6s ease 0.4s forwards;
+  }
+  #choose-skip:hover { color: #a78bfa; }
+
+  @media (max-width: 600px) {
+    .choose-card { width: 100%; max-width: 280px; padding: 32px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .choose-logo, #choose-title, .choose-card, #choose-skip {
+      animation-duration: 0.01s !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="ambient"></div>
+
+<div id="choose-inner">
+  <div class="choose-logo">LIGHTCORE</div>
+  <div id="choose-title">What are you here for?</div>
+  <div id="choose-options">
+    <a class="choose-card choose-card--beats" href="beats.html">
+      <span class="choose-card-icon">♫</span>
+      <span class="choose-card-label">Beats</span>
+      <span class="choose-card-sub">Browse licenses &amp; instrumentals</span>
+    </a>
+    <a class="choose-card choose-card--collabs" href="collabs.html">
+      <span class="choose-card-icon">★</span>
+      <span class="choose-card-label">Collabs</span>
+      <span class="choose-card-sub">Book ThatDaylight on your track</span>
+    </a>
+    <a class="choose-card choose-card--story" href="about.html">
+      <span class="choose-card-icon">✦</span>
+      <span class="choose-card-label">Our Story</span>
+      <span class="choose-card-sub">How LightCore came to be</span>
+    </a>
+  </div>
+  <a id="choose-skip" href="credits.html">See the team behind it →</a>
+</div>
+
+</body>
+</html>

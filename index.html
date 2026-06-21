@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LightCore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    color: #e0e0ff;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  #lcx-warning {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  #lcx-warning.out { opacity: 0; pointer-events: none; }
+
+  #lcx-warning-inner {
+    text-align: center;
+    padding: 40px 32px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  #lcx-warning-icon {
+    font-size: 26px;
+    opacity: 0.75;
+    animation: warnPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes warnPulse {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 0.9; }
+  }
+
+  #lcx-warning-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: #ffffffaa;
+    text-transform: uppercase;
+  }
+
+  #lcx-warning-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    color: #ffffff99;
+    line-height: 1.75;
+    letter-spacing: 0.3px;
+    font-weight: 400;
+  }
+  #lcx-warning-text strong {
+    color: #ffffffcc;
+    font-weight: 600;
+  }
+
+  #lcx-warning-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .lcx-warn-btn {
+    padding: 11px 28px;
+    background: transparent;
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .lcx-warn-safe {
+    border: 1px solid #ffffff55;
+    color: #ffffff99;
+  }
+  .lcx-warn-safe:hover {
+    border-color: #4ade8088;
+    color: #4ade80cc;
+  }
+  .lcx-warn-enter {
+    border: 1px solid #ffffff33;
+    color: #ffffff66;
+  }
+  .lcx-warn-enter:hover {
+    border-color: #ffffff66;
+    color: #ffffffaa;
+  }
+
+  #lcx-warning-note {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    color: #ffffff55;
+    letter-spacing: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #lcx-warning-icon { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="lcx-warning">
+  <div id="lcx-warning-inner">
+    <div id="lcx-warning-icon">⚠</div>
+    <div id="lcx-warning-title">HEADS UP</div>
+    <p id="lcx-warning-text">
+      This site contains flashing lights, rapidly moving particles, and flickering visual effects that <strong>may affect people with epilepsy or photosensitive conditions.</strong>
+      <br><br>
+      Some content may not load correctly when scrolling back up, and the site may feel laggy at times. We're aware of both issues and working on fixes. Sorry for that.
+    </p>
+    <div id="lcx-warning-btns">
+      <button class="lcx-warn-btn lcx-warn-safe" onclick="dismissWarning(true)">DISABLE EFFECTS</button>
+      <button class="lcx-warn-btn lcx-warn-enter" onclick="dismissWarning(false)">ENTER SITE</button>
+    </div>
+    <p id="lcx-warning-note">Effects can be toggled anytime from the nav bar</p>
+  </div>
+</div>
+
+<script>
+  function dismissWarning(safeMode) {
+    try {
+      localStorage.setItem('lcx_safe', safeMode ? '1' : '0');
+      localStorage.setItem('lc_seen_warning', '1');
+    } catch (e) {}
+
+    const w = document.getElementById('lcx-warning');
+    w.classList.add('out');
+    setTimeout(() => {
+      window.location.href = 'intro.html';
+    }, 450);
+  }
+</script>
+
+</body>
+</html>

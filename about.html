@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LightCore — Our Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #02020a;
+    color: #e0e0ff;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: #7c3aed44; color: #fff; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #02020a; }
+  ::-webkit-scrollbar-thumb { background: #7c3aed44; }
+
+  /* ── Ambient backdrop, same language as the store ── */
+  #ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(124,58,237,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 800px 700px at 90% 100%, rgba(245,158,11,0.07) 0%, transparent 60%);
+  }
+  #ambient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent);
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    background: rgba(2,2,10,0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(167,139,250,0.08);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .nav-back {
+    font-family: 'Share Tech Mono', 'Orbitron', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #a78bfa;
+    text-decoration: none;
+    border: 1px solid #7c3aed44;
+    padding: 8px 18px;
+    transition: all 0.25s ease;
+    background: #7c3aed0a;
+  }
+  .nav-back:hover {
+    border-color: #a78bfa;
+    background: #7c3aed1a;
+    box-shadow: 0 0 24px rgba(124,58,237,0.25);
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  .eyebrow {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #a78bfa99;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(32px, 6vw, 52px);
+    letter-spacing: 2px;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 28px;
+  }
+  .lede {
+    font-size: 19px;
+    line-height: 1.7;
+    color: #c7c7e8;
+    font-weight: 300;
+    margin-bottom: 64px;
+    max-width: 60ch;
+  }
+
+  .story-block {
+    margin-bottom: 56px;
+    padding-left: 24px;
+    border-left: 2px solid #7c3aed33;
+    position: relative;
+  }
+  .story-block::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a78bfa;
+    box-shadow: 0 0 10px #a78bfa;
+  }
+  .story-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #f59e0b88;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .story-block p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #d4d4f0;
+    font-weight: 300;
+  }
+  .story-block p + p { margin-top: 14px; }
+  .accent { color: #c4b5fd; font-weight: 600; }
+  .accent-gold { color: #fbbf24; font-weight: 600; }
+
+  .signature {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(167,139,250,0.12);
+    text-align: center;
+  }
+  .signature-names {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #a78bfa;
+    margin-bottom: 8px;
+  }
+  .signature-est {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #6b6b8f;
+    text-transform: uppercase;
+  }
+
+  .cta-row {
+    margin-top: 56px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta-btn {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 32px;
+    border: 1px solid #7c3aed55;
+    color: #e0e0ff;
+    background: #7c3aed0d;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-btn:hover {
+    border-color: #a78bfa;
+    box-shadow: 0 0 30px rgba(124,58,237,0.3);
+    transform: translateY(-2px);
+  }
+  .cta-btn--primary {
+    border-color: #a78bfa99;
+    background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(167,139,250,0.08));
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 18px 20px; }
+    main { padding: 56px 20px 80px; }
+    .story-block { padding-left: 18px; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div id="ambient"></div>
+
+<nav>
+  <a class="nav-logo" href="choose.html">LIGHTCORE</a>
+  <a class="nav-back" href="choose.html">← Back</a>
+</nav>
+
+<main>
+  <div class="eyebrow reveal">Our Story</div>
+  <h1 class="reveal">Two people, one idea, and a name that stuck.</h1>
+  <p class="lede reveal">LightCore wasn't planned as a brand. It started as something smaller — an idea, a sound, a name that two people built together and decided was worth sharing.</p>
+
+  <div class="story-block reveal">
+    <div class="story-label">The Idea</div>
+    <p>It started as <span class="accent">ThatDaylight's</span> idea. She wanted to build something real — a community, not just another page people scroll past.</p>
+  </div>
+
+  <div class="story-block reveal">
+    <div class="story-label">The Name</div>
+    <p>The name came from <span class="accent-gold">EINLXST3RT&lt;P</span>. He wanted something that felt unique to her server, so he looked at what made sense.</p>
+    <p><span class="accent">Daylight</span> already had the word <em>Light</em> in it. <span class="accent">Core</span> got added because that suffix just hits different in music scenes — it's the part that feels permanent.</p>
+  </div>
+
+  <div class="story-block reveal">
+    <div class="story-label">What It Became</div>
+    <p>Put them together and it became something neither of them planned, but both of them meant. Every beat, every collab, every drop since has carried that same idea forward.</p>
+  </div>
+
+  <div class="signature reveal">
+    <div class="signature-names">EINLXST3RT&lt;P × ThatDaylight</div>
+    <div class="signature-est">Est. 2026</div>
+  </div>
+
+  <div class="cta-row reveal">
+    <a class="cta-btn cta-btn--primary" href="beats.html">Browse the Beats</a>
+    <a class="cta-btn" href="credits.html">Meet the Team</a>
+  </div>
+</main>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.06) + 's';
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>
