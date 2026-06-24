@@ -337,6 +337,55 @@
     box-shadow: 0 0 20px rgba(124,58,237,0.3);
   }
 
+  /* ── PATCH NAV ARROWS ───────────────────────────────────────────────── */
+  #wn-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 8px;
+  }
+  .wn-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #6b6b8f;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .wn-nav-btn:hover:not(:disabled) {
+    border-color: #7c3aed66;
+    color: #c9b8ff;
+  }
+  .wn-nav-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+  .wn-nav-btn svg {
+    width: 12px; height: 12px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+  #wn-nav-counter {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: #4b5563;
+    letter-spacing: 1px;
+    text-align: center;
+    flex: 1;
+  }
+
   @media (max-width: 480px) {
     #wn-panel { padding: 24px 18px 20px; }
     #wn-foot { flex-direction: column; align-items: stretch; }
@@ -381,16 +430,24 @@
 <div id="wn-overlay" onclick="if(event.target.id==='wn-overlay') closeWhatsNew();">
   <div id="wn-panel">
     <button id="wn-close" onclick="closeWhatsNew()">✕</button>
+
+    <!-- navigation arrows -->
+    <div id="wn-nav">
+      <button class="wn-nav-btn" id="wn-prev" onclick="wnGo(-1)" disabled>
+        <svg viewBox="0 0 16 16"><polyline points="10 4 6 8 10 12"/></svg>
+        PREV
+      </button>
+      <span id="wn-nav-counter"></span>
+      <button class="wn-nav-btn" id="wn-next" onclick="wnGo(1)">
+        NEXT
+        <svg viewBox="0 0 16 16"><polyline points="6 4 10 8 6 12"/></svg>
+      </button>
+    </div>
+
     <div id="wn-kicker">Patch Notes</div>
     <div id="wn-title">What's New</div>
-    <div id="wn-version">v1.21.0</div>
-
-    <div class="wn-section">
-      <div class="wn-section-label">Changes</div>
-      <div class="wn-item"><span class="wn-item-icon">🧚</span><span class="wn-item-text"><b>Soul is on a break.</b> She's been temporarily removed — she'll be back in a future update with new features.</span></div>
-      <div class="wn-item"><span class="wn-item-icon">◈</span><span class="wn-item-text"><b>Version badge removed.</b> The old build-info badge is gone for now — a new one is coming back later.</span></div>
-      <div class="wn-item"><span class="wn-item-icon">🔠</span><span class="wn-item-text"><b>New hero titles.</b> Beats, Collabs, and Team now have their own page titles instead of all saying "LightCore".</span></div>
-    </div>
+    <div id="wn-version"></div>
+    <div id="wn-body"></div>
 
     <div id="wn-foot">
       <span id="wn-foot-tag">LightCore &middot; EINLXST3RT&lt;P</span>
@@ -400,12 +457,100 @@
 </div>
 
 <script>
-  // ── WHAT'S NEW ───────────────────────────────────────────────────────
-  // Bump WN_VERSION whenever there's something new to show. Anyone whose
-  // last-seen version doesn't match will get the popup once automatically.
-  const WN_VERSION = '1.21.0';
+  // ── PATCH HISTORY ────────────────────────────────────────────────────
+  // Index 0 = most recent. Add new entries at the TOP.
+  // To show the popup automatically to returning visitors, bump WN_VERSION.
+  const WN_VERSION = '1.22.0';
+
+  const PATCH_HISTORY = [
+    // INDEX 0 - LATEST
+    {
+      version: 'v1.22.0',
+      title: "What's New",
+      sections: [
+        {
+          label: 'Changes',
+          items: [
+            { icon: '🛠️', html: '<b>Beats are temporarily unavailable.</b> The beat store is offline while it gets reworked from the ground up — new previews, new pricing, new everything.' },
+          ]
+        }
+      ]
+    },
+    // INDEX 1
+    {
+      version: 'v1.21.0',
+      title: "What's New",
+      sections: [
+        {
+          label: 'Changes',
+          items: [
+            { icon: '◈',  html: '<b>Version badge removed.</b> The old build-info badge is gone for now — a new one is coming back later.' },
+            { icon: '🔠', html: '<b>New hero titles.</b> Beats, Collabs, and Team now have their own page titles instead of all saying "LightCore".' },
+          ]
+        }
+      ]
+    },
+    // INDEX 2 - OLDEST
+    {
+      version: 'v1.20.0',
+      title: "What's New",
+      sections: [
+        {
+          label: 'Changes',
+          items: [
+            { icon: '🧚', html: '<b>Soul is on a break.</b> She\'s been temporarily removed — she\'ll be back in a future update with new features.' },
+          ]
+        }
+      ]
+    },
+  ];
+
+  let wnIndex = 0; // current patch index (0 = latest)
+
+  function renderPatch(idx) {
+    const patch = PATCH_HISTORY[idx];
+    if (!patch) return;
+
+    document.getElementById('wn-version').textContent = patch.version;
+    document.getElementById('wn-title').textContent = patch.title;
+
+    // build sections HTML
+    let html = '';
+    for (const sec of patch.sections) {
+      html += `<div class="wn-section"><div class="wn-section-label">${sec.label}</div>`;
+      for (const item of sec.items) {
+        html += `<div class="wn-item"><span class="wn-item-icon">${item.icon}</span><span class="wn-item-text">${item.html}</span></div>`;
+      }
+      html += '</div>';
+    }
+    document.getElementById('wn-body').innerHTML = html;
+
+    // update nav
+    const total = PATCH_HISTORY.length;
+    document.getElementById('wn-nav-counter').textContent =
+      total > 1 ? `${idx + 1} / ${total}` : '';
+    document.getElementById('wn-prev').disabled = (idx === 0);
+    document.getElementById('wn-next').disabled = (idx === total - 1);
+
+    // label: newest = "CURRENT", older ones show "OLDER"
+    const kicker = document.getElementById('wn-kicker');
+    kicker.textContent = idx === 0 ? 'Patch Notes' : 'Patch Notes — Older';
+
+    // scroll panel to top on navigate
+    const panel = document.getElementById('wn-panel');
+    if (panel) panel.scrollTop = 0;
+  }
+
+  function wnGo(dir) {
+    const next = wnIndex + dir;
+    if (next < 0 || next >= PATCH_HISTORY.length) return;
+    wnIndex = next;
+    renderPatch(wnIndex);
+  }
 
   function openWhatsNew() {
+    wnIndex = 0; // always open on latest
+    renderPatch(0);
     const overlay = document.getElementById('wn-overlay');
     if (!overlay) return;
     overlay.classList.add('show');
@@ -419,11 +564,15 @@
   function markWhatsNewSeen() {
     try { localStorage.setItem('lcx_whats_new_seen', WN_VERSION); } catch (e) {}
   }
+
   window.openWhatsNew = openWhatsNew;
   window.closeWhatsNew = closeWhatsNew;
+  window.wnGo = wnGo;
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeWhatsNew();
+    if (e.key === 'ArrowLeft')  wnGo(-1);
+    if (e.key === 'ArrowRight') wnGo(1);
   });
 
   (function () {

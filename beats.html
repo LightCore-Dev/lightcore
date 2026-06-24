@@ -2184,8 +2184,8 @@
   <!-- BEATS SECTION -->
   <div class="section" id="beats" style="position:relative;">
     <div class="section-num">01</div>
-    <div class="section-label">— Pricing Tiers</div>
-    <div class="section-title">Select a License</div>
+    <div class="section-label">— Status</div>
+    <div class="section-title">Beats Are Currently Unavailable</div>
     <div class="section-divider"></div>
     <div class="beats-grid" id="beatsGrid"></div>
   </div>
@@ -2329,8 +2329,28 @@
   let selectedBeat = null;
   let selectedLic  = null;
 
+  // ─── Flip this back to true once the store rework is ready ──────────
+  const BEATS_AVAILABLE = false;
+
   function buildBeats() {
     const grid = document.getElementById('beatsGrid');
+
+    if (!BEATS_AVAILABLE) {
+      grid.innerHTML = `
+        <div class="beat-card" style="border-color:#f59e0b33;display:flex;flex-direction:column;align-items:flex-start;padding:36px 32px;">
+          <div class="scan-line"></div>
+          <div class="corner-tl" style="color:#f59e0b;"></div>
+          <div class="corner-br" style="color:#f59e0b;"></div>
+          <div class="card-glow-title" style="color:#f59e0b;font-size:22px;text-shadow:0 0 16px #f59e0b66;">⚠ Unavailable</div>
+          <p style="color:#c9c9e6;font-size:14px;line-height:1.7;margin:16px 0 0;max-width:520px;">
+            The beat store is offline while we rework it from the ground up — new previews, new pricing, new everything.
+            Hang tight, it'll be worth it.
+          </p>
+          <button class="btn-secondary" style="margin-top:22px;" onclick="window.location.href='collabs.html'">Check Out Collabs Instead →</button>
+        </div>`;
+      return;
+    }
+
     beats.forEach((b, i) => {
       const key   = b.licKey;
       const c     = licColors[key];
